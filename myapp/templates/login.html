@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .login-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        h2 {
+            text-align: center;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input[type="email"],
+        input[type="password"] {
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            padding: 10px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #4cae4c;
+        }
+        .error-message {
+            color: red;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="loginForm" method="POST" action="/login/">
+            {% csrf_token %}
+            <input type="email" name="email" id="email" placeholder="Email" required  />
+            <input type="password" name="password" id="password" placeholder="Password" required  />
+            <div id="error" class="error-message"></div>
+            <button type="submit">Login</button>
+            <a href="/signup/">Signup</a>
+            <!-- <button type="button" onclick="loginUser()">Login</button> -->
+
+        </form>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.x/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.x/firebase-auth.js"></script>
+    <script>
+        // import firebase;
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyARZ8lmuahYmEoS_VSlqjIAkAhjGMUJ6zM",
+            authDomain: "testinvestment-9d91b.firebaseapp.com",
+            projectId: "testinvestment-9d91b",
+            storageBucket: "testinvestment-9d91b.appspot.com",
+            messagingSenderId: "625665088690",
+            appId: "1:625665088690:web:73841c64af0aade50cfdab"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        function loginUser() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorElement = document.getElementById('error');
+
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    console.log("Login successful", user);
+
+                    // Redirect to Django's dashboard or any protected page
+                    window.location.href = "/dashboard/";
+                })
+                .catch((error) => {
+                    errorElement.textContent = error.message;
+                    console.error("Login failed: ", error.message);
+                });
+        }
+    </script>
+</body>
+</html>
